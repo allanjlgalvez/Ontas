@@ -2,8 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Comedor · Ubicación del Equipo</title>
+  <meta name="description" content="Toca tu mesa en el plano del comedor y comparte tu ubicación por WhatsApp." />
 
   <!-- Configuración PWA y experiencia tipo app nativa (Android e iOS) -->
   <meta name="theme-color" content="#FFFFFF" />
@@ -16,123 +17,10 @@
   <!-- Favicon SVG inmediato: fondo naranja con pin blanco y cubiertos minimalistas -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23F97316'/%3E%3Cstop offset='100%25' stop-color='%23EA580C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='112' fill='url(%23g)'/%3E%3Cpath d='M256 434C194 358 130 290 130 210c0-69.6 56.4-126 126-126s126 56.4 126 126c0 80-64 148-126 224z' fill='%23FFFFFF'/%3E%3Cg fill='none' stroke='%23EA580C' stroke-width='15' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M222 156v42c0 14 9 23 20 23s20-9 20-23v-42M242 156v40M242 221v50'/%3E%3Cpath d='M290 156v115M290 156c18 6 24 26 24 54h-24'/%3E%3C/g%3E%3C/svg%3E" />
 
-  <!-- Generador automático de íconos PNG (180/192/512) y Web App Manifest dinámico -->
-  <script>
-    (function initPwaAssets() {
-      try {
-        function renderIconPng(size) {
-          const canvas = document.createElement('canvas');
-          canvas.width = size;
-          canvas.height = size;
-          const ctx = canvas.getContext('2d');
-          const s = size / 512;
-
-          // Fondo naranja vibrante con degradado sutil (cuadrado completo para iOS y maskable)
-          const grad = ctx.createLinearGradient(0, 0, size, size);
-          grad.addColorStop(0, '#F97316');
-          grad.addColorStop(1, '#EA580C');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, size, size);
-
-          // Brillo superior muy sutil para dar profundidad nativa
-          const sheen = ctx.createRadialGradient(170 * s, 120 * s, 10 * s, 256 * s, 256 * s, 360 * s);
-          sheen.addColorStop(0, 'rgba(255,255,255,0.18)');
-          sheen.addColorStop(1, 'rgba(255,255,255,0)');
-          ctx.fillStyle = sheen;
-          ctx.fillRect(0, 0, size, size);
-
-          ctx.save();
-          ctx.scale(s, s);
-
-          // Pin de ubicación blanco minimalista centrado
-          ctx.shadowColor = 'rgba(154, 52, 18, 0.28)';
-          ctx.shadowBlur = 18;
-          ctx.shadowOffsetY = 8;
-          ctx.fillStyle = '#FFFFFF';
-          ctx.beginPath();
-          ctx.moveTo(256, 434);
-          ctx.bezierCurveTo(194, 358, 130, 290, 130, 210);
-          ctx.arc(256, 210, 126, Math.PI, 0, false);
-          ctx.bezierCurveTo(382, 290, 318, 358, 256, 434);
-          ctx.closePath();
-          ctx.fill();
-
-          // Cubiertos minimalistas en el interior del pin
-          ctx.shadowColor = 'transparent';
-          ctx.strokeStyle = '#EA580C';
-          ctx.lineWidth = 15;
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-
-          // Tenedor (izquierda)
-          ctx.beginPath();
-          ctx.moveTo(214, 154);
-          ctx.lineTo(214, 194);
-          ctx.quadraticCurveTo(214, 218, 234, 218);
-          ctx.quadraticCurveTo(254, 218, 254, 194);
-          ctx.lineTo(254, 154);
-          ctx.moveTo(234, 154);
-          ctx.lineTo(234, 272);
-          ctx.stroke();
-
-          // Cuchillo (derecha)
-          ctx.beginPath();
-          ctx.moveTo(286, 154);
-          ctx.lineTo(286, 272);
-          ctx.moveTo(286, 154);
-          ctx.quadraticCurveTo(314, 166, 312, 212);
-          ctx.lineTo(286, 212);
-          ctx.stroke();
-
-          ctx.restore();
-          return canvas.toDataURL('image/png');
-        }
-
-        const icon180 = renderIconPng(180);
-        const icon192 = renderIconPng(192);
-        const icon512 = renderIconPng(512);
-
-        // Inyectar Apple Touch Icon para iOS (evita captura de pantalla como ícono)
-        const appleIcon = document.createElement('link');
-        appleIcon.rel = 'apple-touch-icon';
-        appleIcon.sizes = '180x180';
-        appleIcon.href = icon180;
-        document.head.appendChild(appleIcon);
-
-        // Inyectar fallback PNG para navegadores Android
-        const pngIcon = document.createElement('link');
-        pngIcon.rel = 'icon';
-        pngIcon.type = 'image/png';
-        pngIcon.sizes = '192x192';
-        pngIcon.href = icon192;
-        document.head.appendChild(pngIcon);
-
-        // Generar Web App Manifest dinámico vía Blob
-        const manifestData = {
-          name: 'Ubicación Comedor',
-          short_name: 'Comedor',
-          description: 'Selecciona tu mesa en el comedor y comparte tu ubicación por WhatsApp.',
-          start_url: window.location.href.split('#')[0],
-          display: 'standalone',
-          orientation: 'portrait',
-          background_color: '#FFFFFF',
-          theme_color: '#FFFFFF',
-          icons: [
-            { src: icon192, sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
-            { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
-          ]
-        };
-
-        const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/manifest+json' });
-        const manifestLink = document.createElement('link');
-        manifestLink.rel = 'manifest';
-        manifestLink.href = URL.createObjectURL(manifestBlob);
-        document.head.appendChild(manifestLink);
-      } catch (err) {
-        // Silencioso si el entorno restringe Blob/Canvas
-      }
-    })();
-  </script>
+  <!-- Íconos y manifest para "Agregar a pantalla de inicio" -->
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
 
   <style>
     /* =========================================================================
@@ -167,9 +55,7 @@
       color: var(--text-main);
       -webkit-font-smoothing: antialiased;
       -webkit-tap-highlight-color: transparent;
-      overscroll-behavior: none;
       touch-action: manipulation;
-      overflow-x: hidden;
     }
 
     body {
@@ -393,16 +279,14 @@
     /* Viewport del SVG ceñido al borde */
     .map-viewport {
       background: #ffffff;
-      overflow: auto;
-      max-height: 76vh;
-      display: flex;
-      justify-content: center;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
       padding: 4px;
     }
 
     @media (min-width: 640px) {
       .map-viewport {
-        max-height: 81vh;
         padding: 6px;
       }
     }
@@ -418,6 +302,7 @@
     }
 
     .svg-scale-wrapper {
+      margin: 0 auto;
       width: 100%;
       max-width: 620px;
       transition: width 0.15s ease, max-width 0.15s ease;
@@ -1847,9 +1732,40 @@
         updateFooterAndPin();
       }
 
+      // En celular las mesas son pequeñas: un toque cercano selecciona la mesa más próxima
+      const SNAP_RADIUS = 16;
+
+      function findNearestTable(clientX, clientY) {
+        const ctm = svgEl.getScreenCTM();
+        if (!ctm) return null;
+        const pt = svgEl.createSVGPoint();
+        pt.x = clientX;
+        pt.y = clientY;
+        const p = pt.matrixTransform(ctm.inverse());
+        let best = null;
+        let bestDist = SNAP_RADIUS;
+        tablesLayer.querySelectorAll('.table-item').forEach((g) => {
+          // Distancia al borde de la mesa (con sillas), no a su centro
+          const box = g.getBBox();
+          const dx = Math.max(box.x - p.x, 0, p.x - (box.x + box.width));
+          const dy = Math.max(box.y - p.y, 0, p.y - (box.y + box.height));
+          const d = Math.hypot(dx, dy);
+          if (d < bestDist) {
+            bestDist = d;
+            best = g;
+          }
+        });
+        return best;
+      }
+
       floorClickArea.addEventListener('click', (e) => {
         if (state.captureMode) return;
-        placeFreePin(e.clientX, e.clientY);
+        const nearest = findNearestTable(e.clientX, e.clientY);
+        if (nearest) {
+          selectTable(nearest);
+        } else {
+          placeFreePin(e.clientX, e.clientY);
+        }
       });
 
       // =========================================================================
