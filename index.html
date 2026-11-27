@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Comedor · Ubicación del Equipo</title>
+
+  <!-- Configuración PWA y experiencia tipo app nativa (Android e iOS) -->
+  <meta name="theme-color" content="#FFFFFF" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Comedor" />
+  <meta name="application-name" content="Comedor" />
+
+  <!-- Favicon SVG inmediato: fondo naranja con pin blanco y cubiertos minimalistas -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23F97316'/%3E%3Cstop offset='100%25' stop-color='%23EA580C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='112' fill='url(%23g)'/%3E%3Cpath d='M256 434C194 358 130 290 130 210c0-69.6 56.4-126 126-126s126 56.4 126 126c0 80-64 148-126 224z' fill='%23FFFFFF'/%3E%3Cg fill='none' stroke='%23EA580C' stroke-width='15' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M222 156v42c0 14 9 23 20 23s20-9 20-23v-42M242 156v40M242 221v50'/%3E%3Cpath d='M290 156v115M290 156c18 6 24 26 24 54h-24'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <!-- Generador automático de íconos PNG (180/192/512) y Web App Manifest dinámico -->
+  <script>
+    (function initPwaAssets() {
+      try {
+        function renderIconPng(size) {
+          const canvas = document.createElement('canvas');
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          const s = size / 512;
+
+          // Fondo naranja vibrante con degradado sutil (cuadrado completo para iOS y maskable)
+          const grad = ctx.createLinearGradient(0, 0, size, size);
+          grad.addColorStop(0, '#F97316');
+          grad.addColorStop(1, '#EA580C');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, size, size);
+
+          // Brillo superior muy sutil para dar profundidad nativa
+          const sheen = ctx.createRadialGradient(170 * s, 120 * s, 10 * s, 256 * s, 256 * s, 360 * s);
+          sheen.addColorStop(0, 'rgba(255,255,255,0.18)');
+          sheen.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.fillStyle = sheen;
+          ctx.fillRect(0, 0, size, size);
+
+          ctx.save();
+          ctx.scale(s, s);
+
+          // Pin de ubicación blanco minimalista centrado
+          ctx.shadowColor = 'rgba(154, 52, 18, 0.28)';
+          ctx.shadowBlur = 18;
+          ctx.shadowOffsetY = 8;
+          ctx.fillStyle = '#FFFFFF';
+          ctx.beginPath();
+          ctx.moveTo(256, 434);
+          ctx.bezierCurveTo(194, 358, 130, 290, 130, 210);
+          ctx.arc(256, 210, 126, Math.PI, 0, false);
+          ctx.bezierCurveTo(382, 290, 318, 358, 256, 434);
+          ctx.closePath();
+          ctx.fill();
+
+          // Cubiertos minimalistas en el interior del pin
+          ctx.shadowColor = 'transparent';
+          ctx.strokeStyle = '#EA580C';
+          ctx.lineWidth = 15;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+
+          // Tenedor (izquierda)
+          ctx.beginPath();
+          ctx.moveTo(214, 154);
+          ctx.lineTo(214, 194);
+          ctx.quadraticCurveTo(214, 218, 234, 218);
+          ctx.quadraticCurveTo(254, 218, 254, 194);
+          ctx.lineTo(254, 154);
+          ctx.moveTo(234, 154);
+          ctx.lineTo(234, 272);
+          ctx.stroke();
+
+          // Cuchillo (derecha)
+          ctx.beginPath();
+          ctx.moveTo(286, 154);
+          ctx.lineTo(286, 272);
+          ctx.moveTo(286, 154);
+          ctx.quadraticCurveTo(314, 166, 312, 212);
+          ctx.lineTo(286, 212);
+          ctx.stroke();
+
+          ctx.restore();
+          return canvas.toDataURL('image/png');
+        }
+
+        const icon180 = renderIconPng(180);
+        const icon192 = renderIconPng(192);
+        const icon512 = renderIconPng(512);
+
+        // Inyectar Apple Touch Icon para iOS (evita captura de pantalla como ícono)
+        const appleIcon = document.createElement('link');
+        appleIcon.rel = 'apple-touch-icon';
+        appleIcon.sizes = '180x180';
+        appleIcon.href = icon180;
+        document.head.appendChild(appleIcon);
+
+        // Inyectar fallback PNG para navegadores Android
+        const pngIcon = document.createElement('link');
+        pngIcon.rel = 'icon';
+        pngIcon.type = 'image/png';
+        pngIcon.sizes = '192x192';
+        pngIcon.href = icon192;
+        document.head.appendChild(pngIcon);
+
+        // Generar Web App Manifest dinámico vía Blob
+        const manifestData = {
+          name: 'Ubicación Comedor',
+          short_name: 'Comedor',
+          description: 'Selecciona tu mesa en el comedor y comparte tu ubicación por WhatsApp.',
+          start_url: window.location.href.split('#')[0],
+          display: 'standalone',
+          orientation: 'portrait',
+          background_color: '#FFFFFF',
+          theme_color: '#FFFFFF',
+          icons: [
+            { src: icon192, sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+            { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+          ]
+        };
+
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/manifest+json' });
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = URL.createObjectURL(manifestBlob);
+        document.head.appendChild(manifestLink);
+      } catch (err) {
+        // Silencioso si el entorno restringe Blob/Canvas
+      }
+    })();
+  </script>
+
+  <style>
+    /* =========================================================================
+       RESET Y VARIABLES DE DISEÑO (100% AUTOCONTENIDO, SIN DEPENDENCIAS)
+       ========================================================================= */
+    :root {
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-soft: #e2e8f0;
+      --accent: #f97316;
+      --accent-dark: #ea580c;
+      --emerald: #059669;
+      --emerald-hover: #047857;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 9px;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none;
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* =========================================================================
+       ENCABEZADO COMPACTO
+       ========================================================================= */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      padding-top: env(safe-area-inset-top, 0px);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(249, 115, 22, 0.28);
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-header-capture {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+      transition: transform 0.12s ease, background-color 0.15s ease;
+    }
+
+    .btn-header-capture:hover {
+      background: #1e293b;
+    }
+
+    .btn-header-capture:active {
+      transform: scale(0.96);
+    }
+
+    /* =========================================================================
+       LAYOUT PRINCIPAL (MOBILE-FIRST -> DESKTOP 2 COLUMNAS)
+       ========================================================================= */
+    .main-container {
+      flex: 1;
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px max(10px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px));
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    @media (min-width: 960px) {
+      .main-container {
+        padding: 16px 18px 28px;
+        grid-template-columns: minmax(0, 7fr) minmax(300px, 4fr);
+        gap: 18px;
+      }
+    }
+
+    /* =========================================================================
+       TARJETA DEL PLANO Y BARRA DE HERRAMIENTAS
+       ========================================================================= */
+    .map-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .map-toolbar {
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border-soft);
+      padding: 8px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* Control segmentado de Encuadre */
+    .segmented-control {
+      display: inline-flex;
+      align-items: center;
+      background: #e2e8f0;
+      padding: 3px;
+      border-radius: 10px;
+      gap: 2px;
+    }
+
+    .seg-btn {
+      padding: 5px 10px;
+      border-radius: 7px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #475569;
+      transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .seg-btn.active {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.1);
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    .zoom-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .tool-btn {
+      height: 30px;
+      min-width: 30px;
+      padding: 0 8px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease, transform 0.1s ease;
+    }
+
+    .tool-btn:hover {
+      background: #f1f5f9;
+    }
+
+    .tool-btn:active {
+      transform: scale(0.95);
+    }
+
+    .tool-btn-clear:hover {
+      background: #fff1f2;
+      border-color: #fecdd3;
+      color: #e11d48;
+    }
+
+    /* Viewport del SVG ceñido al borde */
+    .map-viewport {
+      background: #ffffff;
+      overflow: auto;
+      max-height: 76vh;
+      display: flex;
+      justify-content: center;
+      padding: 4px;
+    }
+
+    @media (min-width: 640px) {
+      .map-viewport {
+        max-height: 81vh;
+        padding: 6px;
+      }
+    }
+
+    .map-viewport::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    .map-viewport::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 999px;
+    }
+
+    .svg-scale-wrapper {
+      width: 100%;
+      max-width: 620px;
+      transition: width 0.15s ease, max-width 0.15s ease;
+      transform-origin: top center;
+    }
+
+    #cafeteriaSvg {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+      -webkit-user-select: none;
+      background: #ffffff;
+    }
+
+    /* Barra inferior discreta del mapa */
+    .map-footer {
+      border-top: 1px solid #f1f5f9;
+      background: #ffffff;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .footer-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #cbd5e1;
+      flex-shrink: 0;
+      transition: background-color 0.15s ease;
+    }
+
+    .footer-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.18);
+    }
+
+    .footer-note {
+      font-size: 13px;
+      font-weight: 500;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .footer-note.active {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .footer-clock {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    /* =========================================================================
+       INTERACCIÓN SVG DE MESAS Y PIN ANIMADO
+       ========================================================================= */
+    .table-item {
+      cursor: pointer;
+      transition: filter 0.15s ease;
+    }
+
+    .table-item:hover .table-surface {
+      fill: #ffedd5;
+      stroke: #f97316;
+    }
+
+    .table-item:hover .chair-shape {
+      fill: #fed7aa;
+      stroke: #ea580c;
+    }
+
+    .table-item.selected .table-surface {
+      fill: #f97316 !important;
+      stroke: #c2410c !important;
+      stroke-width: 2 !important;
+    }
+
+    .table-item.selected .chair-shape {
+      fill: #fdba74 !important;
+      stroke: #c2410c !important;
+    }
+
+    .table-item.selected {
+      filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.65));
+    }
+
+    @keyframes pinPulse {
+      0% { transform: scale(0.75); opacity: 0.85; }
+      75% { transform: scale(2.25); opacity: 0; }
+      100% { transform: scale(2.25); opacity: 0; }
+    }
+
+    @keyframes pinFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .pin-pulse-ring {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: pinPulse 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+
+    .pin-marker-body {
+      animation: pinFloat 1.8s ease-in-out infinite;
+    }
+
+    /* =========================================================================
+       PANEL DE CONTROLES COMPACTO
+       ========================================================================= */
+    .controls-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-sm);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip-btn {
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border-soft);
+      background: #f8fafc;
+      color: #334155;
+      transition: all 0.14s ease;
+    }
+
+    .chip-btn:hover {
+      background: #f1f5f9;
+    }
+
+    .chip-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 2px 5px rgba(249, 115, 22, 0.25);
+    }
+
+    .note-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      background: #f8fafc;
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .note-input:focus {
+      background: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.14);
+    }
+
+    .toggles-list {
+      border-top: 1px solid #f1f5f9;
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .toggle-text {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #475569;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #cbd5e1;
+      border-radius: 999px;
+      transition: background-color 0.18s ease;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      top: 3px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+      transition: transform 0.18s ease;
+    }
+
+    .switch input:checked + .slider {
+      background-color: var(--accent);
+    }
+
+    .switch input:checked + .slider::before {
+      transform: translateX(18px);
+    }
+
+    /* Botones de exportación */
+    .btn-primary-share {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      background: var(--emerald);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-primary-share:hover {
+      background: var(--emerald-hover);
+    }
+
+    .btn-primary-share:active {
+      transform: scale(0.985);
+    }
+
+    .secondary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-secondary {
+      padding: 10px 10px;
+      border-radius: var(--radius-md);
+      background: #f1f5f9;
+      color: #1e293b;
+      font-size: 12.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.97);
+    }
+
+    /* =========================================================================
+       MODO CAPTURA (PANTALLA LIMPIA PARA SCREENSHOT DIRECTO)
+       ========================================================================= */
+    body.capture-mode {
+      background-color: #ffffff !important;
+      cursor: pointer;
+    }
+
+    body.capture-mode .hide-in-capture {
+      display: none !important;
+    }
+
+    body.capture-mode .main-container {
+      max-width: 100% !important;
+      padding: calc(4px + env(safe-area-inset-top, 0px)) max(4px, env(safe-area-inset-right, 0px)) calc(4px + env(safe-area-inset-bottom, 0px)) max(4px, env(safe-area-inset-left, 0px)) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-height: 100vh !important;
+    }
+
+    body.capture-mode #mapSection {
+      width: 100% !important;
+      max-width: 600px !important;
+    }
+
+    body.capture-mode .map-card {
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+
+    body.capture-mode .map-viewport {
+      max-height: none !important;
+      overflow: visible !important;
+      padding: 0 !important;
+    }
+
+    body.capture-mode .svg-scale-wrapper {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    /* =========================================================================
+       TOAST DISCRETO
+       ========================================================================= */
+    .toast-box {
+      position: fixed;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translate(-50%, 10px);
+      z-index: 60;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .toast-box.visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .toast-inner {
+      padding: 9px 15px;
+      border-radius: 12px;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+      white-space: nowrap;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado compacto -->
+  <header class="app-header hide-in-capture">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">Ubicación del Comedor</h1>
+          <p class="brand-sub">Toca tu mesa y compártela en WhatsApp</p>
+        </div>
+      </div>
+
+      <button id="btnCaptureTop" type="button" class="btn-header-capture">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+        </svg>
+        <span>Modo Captura</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main id="mainContainer" class="main-container">
+
+    <!-- Columna del Plano SVG -->
+    <section id="mapSection">
+      <div id="mapCard" class="map-card">
+
+        <!-- Barra de herramientas: Encuadre, Zoom y Limpiar -->
+        <div class="map-toolbar hide-in-capture">
+          <div class="segmented-control" role="group" aria-label="Encuadre del plano">
+            <button id="btnCropComedor" type="button" class="seg-btn active" data-crop="comedor">Solo comedor</button>
+            <button id="btnCropFull" type="button" class="seg-btn" data-crop="completo">Plano completo</button>
+          </div>
+
+          <div class="toolbar-actions">
+            <div class="zoom-group">
+              <button id="btnZoomOut" type="button" class="tool-btn" title="Alejar" aria-label="Alejar">−</button>
+              <button id="btnZoomReset" type="button" class="tool-btn" title="Restablecer zoom">100%</button>
+              <button id="btnZoomIn" type="button" class="tool-btn" title="Acercar" aria-label="Acercar">+</button>
+            </div>
+            <button id="btnClear" type="button" class="tool-btn tool-btn-clear" title="Quitar pin">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              <span>Limpiar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Viewport del Plano SVG -->
+        <div id="mapViewport" class="map-viewport">
+          <div id="svgScaleWrapper" class="svg-scale-wrapper">
+            <!-- Plano Arquitectónico Ceñido: Solo comedor (74 126 814 1038) | Completo (74 0 814 1164) -->
+            <svg id="cafeteriaSvg" xmlns="http://www.w3.org/2000/svg" viewBox="74 126 814 1038">
+              <defs>
+                <filter id="pinShadow" x="-30%" y="-20%" width="160%" height="160%">
+                  <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.3" />
+                </filter>
+                <filter id="bubbleShadow" x="-15%" y="-15%" width="130%" height="150%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#0f172a" flood-opacity="0.24" />
+                </filter>
+              </defs>
+
+              <!-- Fondo blanco puro (clicable para colocar pin libre) -->
+              <rect id="floorClickArea" x="74" y="0" width="814" height="1164" fill="#ffffff" style="cursor: crosshair;" />
+
+              <!-- ========================================================= -->
+              <!-- CONTORNOS ARQUITECTÓNICOS SUAVES (SIN MUROS GRUESOS)      -->
+              <!-- ========================================================= -->
+              <g id="architectureLayer">
+
+                <!-- Cuartos superiores (visibles en encuadre "Plano completo") -->
+                <g id="upperRoomsLayer" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3">
+                  <!-- Arriba-Izquierda (baños sin iconos ni rellenos amarillos) -->
+                  <rect x="96" y="6" width="184" height="270" rx="2" />
+                  <rect x="104" y="14" width="78" height="80" fill="#ffffff" />
+                  <rect x="192" y="14" width="78" height="80" fill="#ffffff" />
+                  <rect x="104" y="102" width="78" height="132" fill="#ffffff" />
+                  <rect x="192" y="102" width="78" height="132" fill="#ffffff" />
+                  <rect x="104" y="242" width="166" height="26" fill="#ffffff" />
+
+                  <!-- Arriba-Centro (cuartos tras Tradicional) -->
+                  <path d="M 288 6 L 288 122 L 606 122 L 606 108 L 696 108 L 696 122 L 788 122 L 788 6 Z" />
+                  <line x1="358" y1="6" x2="358" y2="104" />
+                  <line x1="288" y1="104" x2="358" y2="104" />
+                  <line x1="612" y1="6" x2="612" y2="108" />
+                  <line x1="696" y1="6" x2="696" y2="108" />
+                  <line x1="612" y1="40" x2="696" y2="40" stroke="#e2e8f0" />
+                  <line x1="612" y1="74" x2="696" y2="74" stroke="#e2e8f0" />
+
+                  <!-- Arriba-Derecha (escaleras y cuartos sin iconos) -->
+                  <rect x="796" y="6" width="84" height="276" rx="2" />
+                  <rect x="804" y="14" width="68" height="104" fill="#ffffff" />
+                  <line x1="804" y1="32" x2="872" y2="32" stroke="#e2e8f0" />
+                  <line x1="804" y1="50" x2="872" y2="50" stroke="#e2e8f0" />
+                  <line x1="804" y1="68" x2="872" y2="68" stroke="#e2e8f0" />
+                  <line x1="804" y1="86" x2="872" y2="86" stroke="#e2e8f0" />
+                  <line x1="804" y1="104" x2="872" y2="104" stroke="#e2e8f0" />
+                  <rect x="804" y="132" width="31" height="78" fill="#ffffff" />
+                  <rect x="841" y="132" width="31" height="78" fill="#ffffff" />
+                  <rect x="804" y="218" width="68" height="56" fill="#ffffff" />
+                </g>
+
+                <!-- Bloque arquitectónico suave del ala media-izquierda -->
+                <g fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3">
+                  <rect x="110" y="316" width="182" height="62" rx="2" />
+                  <line x1="110" y1="336" x2="292" y2="336" stroke="#e2e8f0" />
+                  <line x1="110" y1="358" x2="292" y2="358" stroke="#e2e8f0" />
+                  <path d="M 110 384 L 318 384 L 318 514 L 172 514 L 172 556 L 82 556 L 82 462 L 110 462 Z" fill="none" stroke="#cbd5e1" stroke-width="1.4" />
+                  <rect x="82" y="462" width="88" height="94" rx="2" fill="#f8fafc" stroke="#cbd5e1" />
+                </g>
+
+                <!-- ========================================================= -->
+                <!-- LAS 7 ESTACIONES DE COMIDA (ISLAS ARQUITECTÓNICAS)        -->
+                <!-- Relleno #EEF2F6, borde #64748B                            -->
+                <!-- ========================================================= -->
+
+                <!-- 1. TRADICIONAL (Isla horizontal grande al norte) -->
+                <g id="islaTradicional">
+                  <rect x="336" y="138" width="268" height="58" rx="4" fill="#eef2f6" stroke="#64748b" stroke-width="1.7" />
+                  <rect x="344" y="146" width="252" height="42" rx="2" fill="none" stroke="#cbd5e1" stroke-width="0.9" />
+                </g>
+
+                <!-- 2 y 3. ASIÁTICA (arriba) y MEXICANA (abajo) -->
+                <g id="islaNorte">
+                  <!-- Asiática -->
+                  <rect x="392" y="318" width="136" height="54" rx="3" fill="#eef2f6" stroke="#64748b" stroke-width="1.7" />
+                  <rect x="398" y="324" width="124" height="42" rx="1.5" fill="none" stroke="#cbd5e1" stroke-width="0.85" />
+                  <!-- Barra divisoria central -->
+                  <rect x="376" y="372" width="208" height="26" rx="2" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5" />
+                  <line x1="384" y1="385" x2="576" y2="385" stroke="#94a3b8" stroke-width="0.9" stroke-dasharray="6 4" />
+                  <!-- Mexicana -->
+                  <rect x="428" y="398" width="136" height="54" rx="3" fill="#eef2f6" stroke="#64748b" stroke-width="1.7" />
+                  <rect x="434" y="404" width="124" height="42" rx="1.5" fill="none" stroke="#cbd5e1" stroke-width="0.85" />
+                </g>
+
+                <!-- 4 y 5. ITALIANA (izq) y ENSALADAS (der) -->
+                <g id="islaSuroeste">
+                  <!-- Italiana -->
+                  <rect x="94" y="838" width="56" height="118" rx="3" fill="#eef2f6" stroke="#64748b" stroke-width="1.7" />
+                  <rect x="100" y="844" width="44" height="106" rx="1.5" fill="none" stroke="#cbd5e1" stroke-width="0.85" />
+                  <!-- Barra divisoria vertical -->
+                  <rect x="150" y="794" width="28" height="190" rx="2" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5" />
+                  <line x1="164" y1="802" x2="164" y2="976" stroke="#94a3b8" stroke-width="0.9" stroke-dasharray="6 4" />
+                  <!-- Ensaladas -->
+                  <rect x="178" y="808" width="56" height="118" rx="3" fill="#eef2f6" stroke="#64748b" stroke-width="1.7" />
+                  <rect x="184" y="814" width="44" height="106" rx="1.5" fill="none" stroke="#cbd5e1" stroke-width="0.85" />
+                </g>
+
+                <!-- 6 y 7. GRILL (izq) y FLEX (der) -->
+                <g id="islaSureste">
+                  <!-- Grill -->
+                  <rect x="680" y="846" width="56" height="118" rx="3" fill="#eef2f6" stroke="#64748b" stroke-width="1.7" />
+                  <rect x="686" y="852" width="44" height="106" rx="1.5" fill="none" stroke="#cbd5e1" stroke-width="0.85" />
+                  <!-- Barra divisoria vertical -->
+                  <rect x="736" y="802" width="28" height="190" rx="2" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5" />
+                  <line x1="750" y1="810" x2="750" y2="984" stroke="#94a3b8" stroke-width="0.9" stroke-dasharray="6 4" />
+                  <!-- Flex -->
+                  <rect x="764" y="816" width="56" height="118" rx="3" fill="#eef2f6" stroke="#64748b" stroke-width="1.7" />
+                  <rect x="770" y="822" width="44" height="106" rx="1.5" fill="none" stroke="#cbd5e1" stroke-width="0.85" />
+                </g>
+
+                <!-- ========================================================= -->
+                <!-- ETIQUETAS DE LAS 7 ESTACIONES (#1E293B)                   -->
+                <!-- ========================================================= -->
+                <g id="stationLabelsLayer" pointer-events="none"
+                   font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif"
+                   fill="#1e293b" font-weight="700" text-anchor="middle" dominant-baseline="central">
+                  <text x="470" y="167" font-size="18.5" letter-spacing="0.2">Tradicional</text>
+                  <text x="460" y="345" font-size="15.5">Asiática</text>
+                  <text x="496" y="425" font-size="15.5">Mexicana</text>
+                  <text x="122" y="897" font-size="15" transform="rotate(-90 122 897)">Italiana</text>
+                  <text x="206" y="867" font-size="14.5" transform="rotate(-90 206 867)">Ensaladas</text>
+                  <text x="708" y="905" font-size="15.5">Grill</text>
+                  <text x="792" y="875" font-size="15.5">Flex</text>
+                </g>
+              </g>
+
+              <!-- ========================================================= -->
+              <!-- CAPA DE MESAS Y BANCOS INTERACTIVOS (GENERADOS POR JS)    -->
+              <!-- ========================================================= -->
+              <g id="tablesLayer"></g>
+
+              <!-- ========================================================= -->
+              <!-- CAPA DEL PIN ANIMADO DE UBICACIÓN                         -->
+              <!-- ========================================================= -->
+              <g id="pinLayer" style="display: none;" pointer-events="none">
+                <circle id="pinPulse" class="pin-pulse-ring" cx="0" cy="0" r="22" fill="#f97316" fill-opacity="0.35" />
+
+                <g id="pinBody" class="pin-marker-body" filter="url(#pinShadow)">
+                  <path d="M 0 0 C -14 -17 -22 -28 -22 -42 C -22 -54.2 -12.2 -64 0 -64 C 12.2 -64 22 -54.2 22 -42 C 22 -28 14 -17 0 0 Z"
+                    fill="#f97316" stroke="#ffffff" stroke-width="3.5" />
+                  <circle cx="0" cy="-42" r="8.6" fill="#ffffff" />
+                  <circle cx="0" cy="-42" r="3.8" fill="#ea580c" />
+                </g>
+
+                <g id="pinBubbleGroup" filter="url(#bubbleShadow)">
+                  <rect id="pinBubbleBg" x="-95" y="-110" width="190" height="36" rx="18" fill="#0f172a" stroke="#ffffff" stroke-width="2.4" />
+                  <text id="pinBubbleText" x="0" y="-87" text-anchor="middle"
+                    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif"
+                    font-size="15.5" font-weight="700" fill="#ffffff">Aquí estamos</text>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Barra inferior discreta (nota + hora) -->
+        <div id="mapFooterBar" class="map-footer">
+          <div class="footer-left">
+            <span id="footerDot" class="footer-dot"></span>
+            <span id="footerNoteText" class="footer-note">Toca una mesa en el plano</span>
+          </div>
+          <span id="footerClock" class="footer-clock">--:--</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel de Controles Compacto -->
+    <aside class="controls-col hide-in-capture">
+
+      <!-- Etiqueta rápida, nota e interruptores -->
+      <div class="panel-card">
+        <div>
+          <span class="panel-label">Etiqueta del pin</span>
+          <div id="quickChips" class="chips-wrap">
+            <button type="button" data-note="Aquí estamos" class="chip-btn active">Aquí estamos</button>
+            <button type="button" data-note="Guardamos lugar" class="chip-btn">Guardamos lugar</button>
+            <button type="button" data-note="Mesa grande" class="chip-btn">Mesa grande</button>
+            <button type="button" data-note="" class="chip-btn">Solo pin</button>
+          </div>
+        </div>
+
+        <div>
+          <label for="customNoteInput" class="sr-only">Nota corta personalizada</label>
+          <input id="customNoteInput" type="text" maxlength="40" class="note-input"
+            placeholder="Nota corta opcional (ej. Cerca de Grill)" />
+        </div>
+
+        <div class="toggles-list">
+          <div class="toggle-row">
+            <span class="toggle-text">Nombres de estaciones (7)</span>
+            <label class="switch">
+              <input id="toggleStations" type="checkbox" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-text">Mostrar hora</span>
+            <label class="switch">
+              <input id="toggleTime" type="checkbox" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones para compartir por WhatsApp -->
+      <div class="panel-card">
+        <button id="btnSharePng" type="button" class="btn-primary-share">
+          <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+          </svg>
+          <span>Compartir / Guardar PNG</span>
+        </button>
+
+        <div class="secondary-grid">
+          <button id="btnCopyPng" type="button" class="btn-secondary">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+            </svg>
+            <span>Copiar imagen</span>
+          </button>
+
+          <button id="btnCaptureSide" type="button" class="btn-secondary">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />
+            </svg>
+            <span>Modo Captura</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Toast discreto -->
+  <div id="toastBox" class="toast-box" role="status" aria-live="polite">
+    <div class="toast-inner">
+      <span id="toastMessage"></span>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const SVG_NS = 'http://www.w3.org/2000/svg';
+
+      // =========================================================================
+      // MODOS DE ENCUADRE (VIEWBOX CEÑIDO AL ÁREA ÚTIL)
+      // =========================================================================
+      const VIEWBOX_MODES = {
+        comedor: { x: 74, y: 126, w: 814, h: 1038 },  // Justo encima de Tradicional hasta el sur
+        completo: { x: 74, y: 0, w: 814, h: 1164 }    // Incluye contornos de cuartos superiores
+      };
+
+      // =========================================================================
+      // ESTADO DE LA APLICACIÓN
+      // =========================================================================
+      const state = {
+        cropMode: 'comedor',
+        currentVB: { ...VIEWBOX_MODES.comedor },
+        selectedElement: null,
+        pinX: null,
+        pinY: null,
+        quickNote: 'Aquí estamos',
+        customNote: '',
+        showStations: true,
+        showTime: true,
+        zoom: 1,
+        captureMode: false
+      };
+
+      // Referencias DOM
+      const svgEl = document.getElementById('cafeteriaSvg');
+      const tablesLayer = document.getElementById('tablesLayer');
+      const stationLabelsLayer = document.getElementById('stationLabelsLayer');
+      const floorClickArea = document.getElementById('floorClickArea');
+      const pinLayer = document.getElementById('pinLayer');
+      const pinPulse = document.getElementById('pinPulse');
+      const pinBody = document.getElementById('pinBody');
+      const pinBubbleGroup = document.getElementById('pinBubbleGroup');
+      const pinBubbleBg = document.getElementById('pinBubbleBg');
+      const pinBubbleText = document.getElementById('pinBubbleText');
+
+      const mapFooterBar = document.getElementById('mapFooterBar');
+      const footerDot = document.getElementById('footerDot');
+      const footerNoteText = document.getElementById('footerNoteText');
+      const footerClock = document.getElementById('footerClock');
+
+      const btnCropComedor = document.getElementById('btnCropComedor');
+      const btnCropFull = document.getElementById('btnCropFull');
+      const customNoteInput = document.getElementById('customNoteInput');
+      const toggleStations = document.getElementById('toggleStations');
+      const toggleTime = document.getElementById('toggleTime');
+      const svgScaleWrapper = document.getElementById('svgScaleWrapper');
+      const btnZoomReset = document.getElementById('btnZoomReset');
+
+      const toastBox = document.getElementById('toastBox');
+      const toastMessage = document.getElementById('toastMessage');
+      let toastTimer = null;
+      let vbAnimFrame = null;
+
+      // =========================================================================
+      // CONSTRUCTORES SVG DE MOBILIARIO
+      // =========================================================================
+      const STROKE = '#475569';
+      const TABLE_FILL = '#ffffff';
+      const CHAIR_FILL = '#f1f5f9';
+
+      function createSvgEl(tag, attrs = {}) {
+        const el = document.createElementNS(SVG_NS, tag);
+        for (const [k, v] of Object.entries(attrs)) {
+          el.setAttribute(k, v);
+        }
+        return el;
+      }
+
+      function makeSelectableGroup(id, cx, cy) {
+        const g = createSvgEl('g', {
+          class: 'table-item',
+          'data-id': id,
+          'data-cx': cx,
+          'data-cy': cy
+        });
+        g.addEventListener('click', (e) => {
+          if (state.captureMode) return;
+          e.stopPropagation();
+          selectTable(g);
+        });
+        return g;
+      }
+
+      function appendChair(g, x, y, w, h, rx = 1.5) {
+        g.appendChild(createSvgEl('rect', {
+          class: 'chair-shape',
+          x, y, width: w, height: h, rx,
+          fill: CHAIR_FILL,
+          stroke: STROKE,
+          'stroke-width': 1.15
+        }));
+      }
+
+      // 1. Mesa comunal vertical (3, 4, 5 o 6 sillas por lado -> 6, 8, 10 o 12 sillas)
+      function addCommunalVertical(id, cx, cy, chairsPerSide = 5, w = 16, h = null) {
+        const height = h || (chairsPerSide * 10 + 4);
+        const x = cx - w / 2;
+        const y = cy - height / 2;
+        const g = makeSelectableGroup(id, cx, cy);
+
+        const step = height / chairsPerSide;
+        for (let i = 0; i < chairsPerSide; i++) {
+          const chY = y + i * step + (step - 6.6) / 2;
+          appendChair(g, x - 5.2, chY, 4.2, 6.6, 1.4);
+          appendChair(g, x + w + 1.0, chY, 4.2, 6.6, 1.4);
+        }
+
+        g.appendChild(createSvgEl('rect', {
+          class: 'table-surface',
+          x, y, width: w, height, rx: 2,
+          fill: TABLE_FILL, stroke: STROKE, 'stroke-width': 1.45
+        }));
+        g.appendChild(createSvgEl('line', {
+          x1: cx, y1: y + 2, x2: cx, y2: y + height - 2,
+          stroke: '#cbd5e1', 'stroke-width': 0.9
+        }));
+        tablesLayer.appendChild(g);
+      }
+
+      // 2. Mesa cabina / booth (con 2 bancas paralelas)
+      function addBooth(id, cx, cy, w = 28, h = 20, vertical = false) {
+        const g = makeSelectableGroup(id, cx, cy);
+        const x = cx - w / 2;
+        const y = cy - h / 2;
+
+        if (!vertical) {
+          appendChair(g, x - 1, y - 6.2, w + 2, 5, 1.6);
+          appendChair(g, x - 1, y + h + 1.2, w + 2, 5, 1.6);
+        } else {
+          appendChair(g, x - 6.2, y - 1, 5, h + 2, 1.6);
+          appendChair(g, x + w + 1.2, y - 1, 5, h + 2, 1.6);
+        }
+
+        g.appendChild(createSvgEl('rect', {
+          class: 'table-surface',
+          x, y, width: w, height: h, rx: 2,
+          fill: '#f8fafc', stroke: STROKE, 'stroke-width': 1.5
+        }));
+        tablesLayer.appendChild(g);
+      }
+
+      // 3. Mesa barra larga (horizontal de 8 sillas o vertical de 6 sillas)
+      function addLongBar(id, cx, cy, length = 50, horizontal = true, stools = 4) {
+        const g = makeSelectableGroup(id, cx, cy);
+        const thick = 13.5;
+
+        if (horizontal) {
+          const x = cx - length / 2;
+          const y = cy - thick / 2;
+          const step = length / stools;
+          for (let i = 0; i < stools; i++) {
+            const sx = x + i * step + (step - 6.5) / 2;
+            appendChair(g, sx, y - 4.6, 6.5, 3.6, 1.3);
+            appendChair(g, sx, y + thick + 1, 6.5, 3.6, 1.3);
+          }
+          g.appendChild(createSvgEl('rect', {
+            class: 'table-surface',
+            x, y, width: length, height: thick, rx: 2,
+            fill: TABLE_FILL, stroke: STROKE, 'stroke-width': 1.4
+          }));
+        } else {
+          const x = cx - thick / 2;
+          const y = cy - length / 2;
+          const step = length / stools;
+          for (let i = 0; i < stools; i++) {
+            const sy = y + i * step + (step - 6.5) / 2;
+            appendChair(g, x - 4.6, sy, 3.6, 6.5, 1.3);
+            appendChair(g, x + thick + 1, sy, 3.6, 6.5, 1.3);
+          }
+          g.appendChild(createSvgEl('rect', {
+            class: 'table-surface',
+            x, y, width: thick, height: length, rx: 2,
+            fill: TABLE_FILL, stroke: STROKE, 'stroke-width': 1.4
+          }));
+        }
+        tablesLayer.appendChild(g);
+      }
+
+      // 4. Mesa cuadrada de 4 sillas (2 arriba/2 abajo o 4 en las esquinas)
+      function addSquare4(id, cx, cy, size = 19, diagonal = false) {
+        const g = makeSelectableGroup(id, cx, cy);
+        const x = cx - size / 2;
+        const y = cy - size / 2;
+
+        if (diagonal) {
+          const r = size * 0.66;
+          [Math.PI / 4, (3 * Math.PI) / 4, (5 * Math.PI) / 4, (7 * Math.PI) / 4].forEach((ang) => {
+            g.appendChild(createSvgEl('circle', {
+              class: 'chair-shape',
+              cx: cx + Math.cos(ang) * r,
+              cy: cy + Math.sin(ang) * r,
+              r: 3.6,
+              fill: CHAIR_FILL, stroke: STROKE, 'stroke-width': 1.15
+            }));
+          });
+          g.appendChild(createSvgEl('rect', {
+            class: 'table-surface',
+            x: cx - size * 0.42, y: cy - size * 0.42,
+            width: size * 0.84, height: size * 0.84, rx: 2.5,
+            fill: TABLE_FILL, stroke: STROKE, 'stroke-width': 1.4
+          }));
+        } else {
+          appendChair(g, x + 2, y - 4.8, 6.2, 3.8, 1.2);
+          appendChair(g, x + size - 8.2, y - 4.8, 6.2, 3.8, 1.2);
+          appendChair(g, x + 2, y + size + 1, 6.2, 3.8, 1.2);
+          appendChair(g, x + size - 8.2, y + size + 1, 6.2, 3.8, 1.2);
+
+          g.appendChild(createSvgEl('rect', {
+            class: 'table-surface',
+            x, y, width: size, height: size, rx: 2,
+            fill: TABLE_FILL, stroke: STROKE, 'stroke-width': 1.4
+          }));
+        }
+        tablesLayer.appendChild(g);
+      }
+
+      // 5. Mesita de 2 sillas (vertical u horizontal)
+      function addSmall2(id, cx, cy, horizontal = false) {
+        const g = makeSelectableGroup(id, cx, cy);
+        const w = horizontal ? 18 : 13.5;
+        const h = horizontal ? 13.5 : 18;
+        const x = cx - w / 2;
+        const y = cy - h / 2;
+
+        if (horizontal) {
+          appendChair(g, x - 4.8, cy - 3.8, 3.8, 7.6, 1.4);
+          appendChair(g, x + w + 1, cy - 3.8, 3.8, 7.6, 1.4);
+        } else {
+          appendChair(g, cx - 4.2, y - 4.8, 8.4, 3.8, 1.4);
+          appendChair(g, cx - 4.2, y + h + 1, 8.4, 3.8, 1.4);
+        }
+
+        g.appendChild(createSvgEl('rect', {
+          class: 'table-surface',
+          x, y, width: w, height: h, rx: 2.2,
+          fill: TABLE_FILL, stroke: STROKE, 'stroke-width': 1.35
+        }));
+        tablesLayer.appendChild(g);
+      }
+
+      // 6. Mesa horizontal de 4 sillas (pareada)
+      function addPairedDouble(id, cx, cy, w = 36, h = 21) {
+        const g = makeSelectableGroup(id, cx, cy);
+        const x = cx - w / 2;
+        const y = cy - h / 2;
+
+        appendChair(g, x - 6.6, y + 2, 5, 7, 1.6);
+        appendChair(g, x - 6.6, y + h - 9, 5, 7, 1.6);
+        appendChair(g, x + w + 1.6, y + 2, 5, 7, 1.6);
+        appendChair(g, x + w + 1.6, y + h - 9, 5, 7, 1.6);
+
+        g.appendChild(createSvgEl('rect', {
+          class: 'table-surface',
+          x, y, width: w, height: h, rx: 2,
+          fill: TABLE_FILL, stroke: STROKE, 'stroke-width': 1.4
+        }));
+        g.appendChild(createSvgEl('line', {
+          x1: cx, y1: y + 1, x2: cx, y2: y + h - 1,
+          stroke: STROKE, 'stroke-width': 1.05
+        }));
+        tablesLayer.appendChild(g);
+      }
+
+      // 7. Mesa triangular / trébol de 3 sillas
+      function addClover3(id, cx, cy, r = 8.5, rotOffset = -Math.PI / 2) {
+        const g = makeSelectableGroup(id, cx, cy);
+        for (let i = 0; i < 3; i++) {
+          const ang = rotOffset + (i * 2 * Math.PI) / 3;
+          g.appendChild(createSvgEl('circle', {
+            class: 'chair-shape',
+            cx: cx + Math.cos(ang) * (r + 4.8),
+            cy: cy + Math.sin(ang) * (r + 4.8),
+            r: 3.8,
+            fill: CHAIR_FILL, stroke: STROKE, 'stroke-width': 1.15
+          }));
+        }
+        g.appendChild(createSvgEl('circle', {
+          class: 'table-surface',
+          cx, cy, r,
+          fill: TABLE_FILL, stroke: STROKE, 'stroke-width': 1.4
+        }));
+        tablesLayer.appendChild(g);
+      }
+
+      // 8. Bancos redondos junto a las islas de comida (seleccionables)
+      function addIslandStools(id, startX, startY, vertical = true, count = 5, spacing = 10) {
+        const cx = vertical ? startX : startX + ((count - 1) * spacing) / 2;
+        const cy = vertical ? startY + ((count - 1) * spacing) / 2 : startY;
+        const g = makeSelectableGroup(id, cx, cy);
+
+        const hitW = vertical ? 16 : count * spacing + 8;
+        const hitH = vertical ? count * spacing + 8 : 16;
+        g.appendChild(createSvgEl('rect', {
+          x: cx - hitW / 2,
+          y: cy - hitH / 2,
+          width: hitW,
+          height: hitH,
+          fill: 'transparent'
+        }));
+
+        for (let i = 0; i < count; i++) {
+          const sx = vertical ? startX : startX + i * spacing;
+          const sy = vertical ? startY + i * spacing : startY;
+          g.appendChild(createSvgEl('circle', {
+            class: 'table-surface',
+            cx: sx, cy: sy, r: 3.5,
+            fill: '#64748b',
+            stroke: '#334155',
+            'stroke-width': 1.05
+          }));
+        }
+        tablesLayer.appendChild(g);
+      }
+
+      // =========================================================================
+      // DISTRIBUCIÓN FIEL DE TODAS LAS MESAS Y BANCOS
+      // =========================================================================
+      function buildAllTables() {
+        // Bancos redondos de las islas de comida
+        // Asiática: 6 bancos a la derecha | Mexicana: 6 bancos a la izquierda
+        addIslandStools('ISLA-ASIATICA', 536, 323.5, true, 6, 8.6);
+        addIslandStools('ISLA-MEXICANA', 420, 403.5, true, 6, 8.6);
+        // Italiana: 5 bancos arriba | Ensaladas: 5 bancos abajo
+        addIslandStools('ISLA-ITALIANA', 102, 830, false, 5, 10);
+        addIslandStools('ISLA-ENSALADAS', 186, 934, false, 5, 10);
+        // Grill: 5 bancos arriba | Flex: 5 bancos abajo
+        addIslandStools('ISLA-GRILL', 688, 838, false, 5, 10);
+        addIslandStools('ISLA-FLEX', 772, 942, false, 5, 10);
+
+        // 1. DEBAJO DE TRADICIONAL (6 cuadradas de 4 sillas + 8-sillas, 2 cabina, 8-sillas)
+        [368, 404, 440, 504, 540, 576].forEach((x, i) => {
+          addSquare4(`N-TOP-${i}`, x, 236, 18);
+        });
+        addLongBar('N-BAR-L1', 386, 282, 52, true, 4);
+        addBooth('N-BOOTH-1', 450, 282, 26, 20);
+        addBooth('N-BOOTH-2', 494, 282, 26, 20);
+        addLongBar('N-BAR-R1', 558, 282, 52, true, 4);
+
+        // 2. NORESTE (Derecha de Tradicional): 3 verticales largas de 12 sillas
+        [654, 692, 730].forEach((x, i) => {
+          addCommunalVertical(`NE-COM-${i}`, x, 208, 6, 17, 74);
+        });
+
+        // 3. ALA MEDIA-IZQUIERDA (2 individuales izq + 3 cuadradas con sillas en esquinas der)
+        addSmall2('ALC-L1', 136, 412, false);
+        addSmall2('ALC-L2', 136, 474, false);
+        [408, 448, 488].forEach((y, i) => {
+          addSquare4(`ALC-R-${i}`, 298, y, 18, true);
+        });
+
+        // 4. ALREDEDOR DE ASIÁTICA Y MEXICANA
+        addSmall2('AM-L1', 358, 330, false);
+        addSmall2('AM-L2', 358, 368, false);
+        addSmall2('AM-R1', 562, 336, false);
+        addSmall2('AM-R2', 590, 336, false);
+        addSmall2('AM-BL1', 370, 456, false);
+        addSmall2('AM-BL2', 398, 456, false);
+        addSmall2('AM-BR1', 594, 416, false);
+        addSmall2('AM-BR2', 594, 454, false);
+
+        // Debajo de Mexicana
+        addLongBar('N-BAR-L2', 386, 500, 52, true, 4);
+        addBooth('N-BOOTH-3', 450, 500, 26, 20);
+        addBooth('N-BOOTH-4', 494, 500, 26, 20);
+        addLongBar('N-BAR-R2', 558, 500, 52, true, 4);
+
+        // 5. COLUMNA ESTE SUPERIOR
+        for (let r = 0; r < 6; r++) {
+          addPairedDouble(`DS-PAIR-${r}`, 676, 322 + r * 32, 36, 21);
+        }
+        [394, 440, 486].forEach((y, i) => {
+          addClover3(`DS-CLOV-${i}`, 742, y, 8.5, Math.PI);
+        });
+        for (let r = 0; r < 2; r++) {
+          for (let c = 0; c < 4; c++) {
+            addSmall2(`DS-SM-${r}-${c}`, 784 + c * 28, 328 + r * 42, false);
+          }
+        }
+        addLongBar('DS-BAR-1', 802, 430, 44, true, 4);
+        addLongBar('DS-BAR-2', 856, 430, 44, true, 4);
+
+        // 6. BANDA CENTRAL - IZQUIERDA
+        [588, 636, 684].forEach((y, i) => {
+          addBooth(`CI-BOOTH-${i}`, 100, y, 28, 21);
+          addPairedDouble(`CI-RECT-${i}`, 144, y, 22, 21);
+        });
+        for (let r = 0; r < 2; r++) {
+          for (let c = 0; c < 4; c++) {
+            addSquare4(`CI-SQ-${r}-${c}`, 202 + c * 30, 588 + r * 48, 18);
+          }
+        }
+        [206, 246, 286].forEach((x, i) => {
+          addBooth(`CI-BOT-${i}`, x, 684, 26, 20);
+        });
+
+        // 7. BANDA CENTRAL - CENTRO PRINCIPAL (2 bloques de 3 cols x 3 filas)
+        const centralCols = [374, 410, 446, 508, 544, 580];
+        centralCols.forEach((x, cIdx) => {
+          const isLastCol = cIdx === 5;
+          addCommunalVertical(
+            `C-TOP-${cIdx}`,
+            x,
+            isLastCol ? 593 : 588,
+            isLastCol ? 4 : 5,
+            16,
+            isLastCol ? 44 : 54
+          );
+          addCommunalVertical(`C-MID-${cIdx}`, x, 646, 3, 16, 36);
+          addCommunalVertical(`C-BOT-${cIdx}`, x, 694, 3, 16, 36);
+        });
+
+        // 8. BANDA CENTRAL - DERECHA
+        for (let r = 0; r < 4; r++) {
+          addPairedDouble(`CD-PAIR-${r}`, 676, 594 + r * 32, 36, 21);
+        }
+        [600, 646, 692].forEach((y, i) => {
+          addClover3(`CD-CLOV-${i}`, 742, y, 8.5, Math.PI);
+        });
+        for (let r = 0; r < 2; r++) {
+          for (let c = 0; c < 3; c++) {
+            addSquare4(`CD-SQ-${r}-${c}`, 790 + c * 36, 600 + r * 48, 20);
+          }
+        }
+        addLongBar('CD-BAR-1', 804, 694, 44, true, 4);
+        addLongBar('CD-BAR-2', 856, 694, 44, true, 4);
+
+        // 9. BANDA INFERIOR-MEDIA - JUNTO A ITALIANA / ENSALADAS
+        addSmall2('SO-TL', 108, 772, false);
+        addSmall2('SO-TR1', 196, 754, true);
+        addSmall2('SO-TR2', 232, 754, true);
+
+        addLongBar('SO-C1', 274, 784, 44, false, 3);
+        addBooth('SO-C2', 274, 846, 24, 20);
+        addBooth('SO-C3', 274, 892, 24, 20);
+        addLongBar('SO-C4', 274, 956, 44, false, 3);
+
+        addSmall2('SO-BL1', 108, 988, true);
+        addSmall2('SO-BL2', 146, 988, true);
+        addSquare4('SO-BR', 232, 962, 18);
+
+        // 10. BANDA INFERIOR-MEDIA - CENTRO-SUR
+        for (let r = 0; r < 3; r++) {
+          addPairedDouble(`CS-TL-${r}`, 414, 776 + r * 32, 34, 20);
+        }
+        [504, 542, 580].forEach((x, i) => {
+          addBooth(`CS-TR-B${i}`, x, 776, 24, 19);
+        });
+        for (let r = 0; r < 2; r++) {
+          for (let c = 0; c < 4; c++) {
+            addSquare4(`CS-TR-SQ${r}-${c}`, 500 + c * 28, 816 + r * 38, 16);
+          }
+        }
+        addClover3('CS-CLOV-MID', 464, 854, 8);
+
+        for (let r = 0; r < 2; r++) {
+          for (let c = 0; c < 4; c++) {
+            addSquare4(`CS-BL-SQ${r}-${c}`, 374 + c * 28, 896 + r * 38, 16);
+          }
+        }
+        addLongBar('CS-BL-BAR1', 390, 978, 44, true, 4);
+        addLongBar('CS-BL-BAR2', 446, 978, 44, true, 4);
+
+        addClover3('CS-CLOV-B1', 494, 904, 8);
+        addClover3('CS-CLOV-B2', 494, 976, 8);
+
+        for (let r = 0; r < 3; r++) {
+          addPairedDouble(`CS-BR-${r}`, 554, 904 + r * 34, 34, 20);
+        }
+
+        // 11. BANDA INFERIOR-MEDIA - JUNTO A GRILL / FLEX
+        addLongBar('SE-L1', 638, 788, 44, false, 3);
+        addBooth('SE-L2', 638, 850, 24, 20);
+        addBooth('SE-L3', 638, 896, 24, 20);
+        addLongBar('SE-L4', 638, 960, 44, false, 3);
+
+        addSmall2('SE-TL', 682, 792, false);
+        addSmall2('SE-TR1', 774, 766, true);
+        addSmall2('SE-TR2', 810, 766, true);
+
+        addLongBar('SE-R1', 854, 792, 44, false, 3);
+        addBooth('SE-R2', 854, 854, 24, 20);
+        addBooth('SE-R3', 854, 900, 24, 20);
+        addLongBar('SE-R4', 854, 964, 44, false, 3);
+
+        addSmall2('SE-BL1', 688, 992, true);
+        addSmall2('SE-BL2', 726, 992, true);
+        addSmall2('SE-BR', 814, 968, false);
+
+        // 12. ZONA SUR (Extremo izquierdo + 5 bloques verticales de 2 filas)
+        [1048, 1088, 1128].forEach((y, i) => {
+          addLongBar(`S-LBAR-${i}`, 114, y, 48, true, 4);
+          addSmall2(`S-LSM-${i}`, 164, y, false);
+        });
+
+        // Bloques 1, 2 y 3 (3 cols x 2 filas: arriba 10 sillas, abajo 6 sillas)
+        const southMainBlocks = [
+          [214, 250, 286],
+          [374, 410, 446],
+          [508, 544, 580]
+        ];
+        southMainBlocks.forEach((cols, bIdx) => {
+          cols.forEach((x, cIdx) => {
+            addCommunalVertical(`S-M${bIdx}-${cIdx}-T`, x, 1068, 5, 16, 52);
+            addCommunalVertical(`S-M${bIdx}-${cIdx}-B`, x, 1128, 3, 16, 36);
+          });
+        });
+
+        // Bloques 4 y 5 (arriba 8 sillas, abajo 6 sillas; bloque 5 tiene 2 cols x 2 filas + 1 mesita arriba-der)
+        const southRightGroups = [
+          [652, 686, 720],
+          [774, 808, 842]
+        ];
+        southRightGroups.forEach((cols, gIdx) => {
+          cols.forEach((x, cIdx) => {
+            if (gIdx === 1 && cIdx === 2) {
+              addSmall2('S-R-CORNER', x, 1054, false);
+              return;
+            }
+            addCommunalVertical(`S-R${gIdx}-${cIdx}-T`, x, 1068, 4, 15.5, 44);
+            addCommunalVertical(`S-R${gIdx}-${cIdx}-B`, x, 1128, 3, 15.5, 36);
+          });
+        });
+      }
+
+      // =========================================================================
+      // TRANSICIÓN SUAVE DE ENCUADRE (VIEWBOX)
+      // =========================================================================
+      function setCropMode(mode, instant = false) {
+        if (!VIEWBOX_MODES[mode]) return;
+        state.cropMode = mode;
+
+        btnCropComedor.classList.toggle('active', mode === 'comedor');
+        btnCropFull.classList.toggle('active', mode === 'completo');
+
+        const target = VIEWBOX_MODES[mode];
+        if (vbAnimFrame) {
+          cancelAnimationFrame(vbAnimFrame);
+          vbAnimFrame = null;
+        }
+
+        if (instant) {
+          state.currentVB = { ...target };
+          svgEl.setAttribute('viewBox', `${target.x} ${target.y} ${target.w} ${target.h}`);
+          updateFooterAndPin();
+          return;
+        }
+
+        const start = { ...state.currentVB };
+        const duration = 220;
+        const startTime = performance.now();
+
+        function step(now) {
+          const t = Math.min(1, (now - startTime) / duration);
+          const ease = 1 - Math.pow(1 - t, 3);
+          const cur = {
+            x: start.x + (target.x - start.x) * ease,
+            y: start.y + (target.y - start.y) * ease,
+            w: start.w + (target.w - start.w) * ease,
+            h: start.h + (target.h - start.h) * ease
+          };
+          state.currentVB = cur;
+          svgEl.setAttribute(
+            'viewBox',
+            `${cur.x.toFixed(1)} ${cur.y.toFixed(1)} ${cur.w.toFixed(1)} ${cur.h.toFixed(1)}`
+          );
+
+          if (t < 1) {
+            vbAnimFrame = requestAnimationFrame(step);
+          } else {
+            state.currentVB = { ...target };
+            svgEl.setAttribute('viewBox', `${target.x} ${target.y} ${target.w} ${target.h}`);
+            vbAnimFrame = null;
+            updateFooterAndPin();
+          }
+        }
+
+        vbAnimFrame = requestAnimationFrame(step);
+      }
+
+      // =========================================================================
+      // LÓGICA DEL PIN INTELIGENTE Y BARRA INFERIOR
+      // =========================================================================
+      function getActiveNote() {
+        const custom = state.customNote.trim();
+        return custom.length > 0 ? custom : state.quickNote;
+      }
+
+      function getFormattedTime() {
+        return new Date().toLocaleTimeString('es-MX', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        });
+      }
+
+      function updateFooterAndPin() {
+        const note = getActiveNote();
+        const hasPin = state.pinX !== null && state.pinY !== null;
+        const vb = VIEWBOX_MODES[state.cropMode];
+
+        // Mostrar/ocultar nombres de estaciones
+        stationLabelsLayer.style.display = state.showStations ? 'block' : 'none';
+
+        // Barra inferior
+        footerClock.textContent = getFormattedTime();
+        footerClock.style.display = state.showTime ? 'inline' : 'none';
+
+        if (hasPin) {
+          footerDot.classList.add('active');
+          footerNoteText.textContent = note || 'Ubicación marcada';
+          footerNoteText.classList.add('active');
+        } else {
+          footerDot.classList.remove('active');
+          footerNoteText.textContent = 'Toca una mesa en el plano';
+          footerNoteText.classList.remove('active');
+        }
+
+        if (state.captureMode && !note && !state.showTime) {
+          mapFooterBar.style.display = 'none';
+        } else {
+          mapFooterBar.style.display = 'flex';
+        }
+
+        if (!hasPin) {
+          pinLayer.style.display = 'none';
+          return;
+        }
+
+        pinLayer.style.display = 'block';
+        const x = state.pinX;
+        const y = state.pinY;
+
+        pinPulse.setAttribute('cx', x);
+        pinPulse.setAttribute('cy', y);
+        pinBody.setAttribute('transform', `translate(${x}, ${y})`);
+
+        // Posicionamiento inteligente del globo respecto al viewBox activo
+        if (note) {
+          pinBubbleGroup.style.display = 'block';
+          pinBubbleText.textContent = note;
+
+          const bubbleH = 36;
+          const approxW = Math.max(134, Math.min(340, note.length * 9.3 + 38));
+          const halfW = approxW / 2;
+
+          const minX = vb.x + 12;
+          const maxX = vb.x + vb.w - 12;
+          const minY = vb.y + 12;
+          const maxY = vb.y + vb.h - 12;
+
+          // Centrado horizontal con clamping seguro a ambos bordes
+          let cx = x;
+          if (cx - halfW < minX) cx = minX + halfW;
+          if (cx + halfW > maxX) cx = maxX - halfW;
+
+          // Por defecto arriba del pin; si choca con el techo del viewBox, pasa abajo del punto
+          let bubbleY = y - 110;
+          if (bubbleY < minY) {
+            bubbleY = y + 18;
+          }
+          // Seguridad contra el borde inferior
+          if (bubbleY + bubbleH > maxY) {
+            bubbleY = Math.max(minY, maxY - bubbleH);
+          }
+
+          const textY = bubbleY + 23.5;
+
+          pinBubbleBg.setAttribute('x', cx - halfW);
+          pinBubbleBg.setAttribute('y', bubbleY);
+          pinBubbleBg.setAttribute('width', approxW);
+          pinBubbleBg.setAttribute('height', bubbleH);
+          pinBubbleText.setAttribute('x', cx);
+          pinBubbleText.setAttribute('y', textY);
+        } else {
+          pinBubbleGroup.style.display = 'none';
+        }
+      }
+
+      function selectTable(el) {
+        if (state.selectedElement) {
+          state.selectedElement.classList.remove('selected');
+        }
+        el.classList.add('selected');
+        state.selectedElement = el;
+        state.pinX = parseFloat(el.getAttribute('data-cx'));
+        state.pinY = parseFloat(el.getAttribute('data-cy'));
+        updateFooterAndPin();
+      }
+
+      function placeFreePin(clientX, clientY) {
+        const pt = svgEl.createSVGPoint();
+        pt.x = clientX;
+        pt.y = clientY;
+        const ctm = svgEl.getScreenCTM();
+        if (!ctm) return;
+        const svgP = pt.matrixTransform(ctm.inverse());
+        const vb = VIEWBOX_MODES[state.cropMode];
+
+        if (state.selectedElement) {
+          state.selectedElement.classList.remove('selected');
+          state.selectedElement = null;
+        }
+        state.pinX = Math.max(vb.x + 18, Math.min(vb.x + vb.w - 18, Math.round(svgP.x)));
+        state.pinY = Math.max(vb.y + 18, Math.min(vb.y + vb.h - 18, Math.round(svgP.y)));
+        updateFooterAndPin();
+      }
+
+      function clearSelection() {
+        if (state.selectedElement) {
+          state.selectedElement.classList.remove('selected');
+          state.selectedElement = null;
+        }
+        state.pinX = null;
+        state.pinY = null;
+        updateFooterAndPin();
+      }
+
+      floorClickArea.addEventListener('click', (e) => {
+        if (state.captureMode) return;
+        placeFreePin(e.clientX, e.clientY);
+      });
+
+      // =========================================================================
+      // EVENTOS DE CONTROLES
+      // =========================================================================
+      btnCropComedor.addEventListener('click', () => setCropMode('comedor'));
+      btnCropFull.addEventListener('click', () => setCropMode('completo'));
+
+      const chipButtons = document.querySelectorAll('.chip-btn');
+      chipButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          chipButtons.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.quickNote = btn.getAttribute('data-note');
+          customNoteInput.value = '';
+          state.customNote = '';
+          updateFooterAndPin();
+        });
+      });
+
+      customNoteInput.addEventListener('input', (e) => {
+        state.customNote = e.target.value;
+        updateFooterAndPin();
+      });
+
+      toggleStations.addEventListener('change', (e) => {
+        state.showStations = e.target.checked;
+        updateFooterAndPin();
+      });
+
+      toggleTime.addEventListener('change', (e) => {
+        state.showTime = e.target.checked;
+        updateFooterAndPin();
+      });
+
+      function applyZoom(val) {
+        state.zoom = Math.max(0.85, Math.min(2.2, Number(val.toFixed(2))));
+        svgScaleWrapper.style.width = `${state.zoom * 100}%`;
+        svgScaleWrapper.style.maxWidth = `${Math.round(620 * state.zoom)}px`;
+        btnZoomReset.textContent = `${Math.round(state.zoom * 100)}%`;
+      }
+
+      document.getElementById('btnZoomIn').addEventListener('click', () => applyZoom(state.zoom + 0.25));
+      document.getElementById('btnZoomOut').addEventListener('click', () => applyZoom(state.zoom - 0.25));
+      btnZoomReset.addEventListener('click', () => applyZoom(1));
+
+      document.getElementById('btnClear').addEventListener('click', () => {
+        clearSelection();
+        showToast('Pin eliminado');
+      });
+
+      // Modo Captura (un toque en cualquier parte sale)
+      function setCaptureMode(enable) {
+        state.captureMode = enable;
+        if (enable) {
+          applyZoom(1);
+          document.body.classList.add('capture-mode');
+          window.scrollTo({ top: 0, behavior: 'instant' });
+          updateFooterAndPin();
+          showToast('Toca cualquier parte para salir');
+        } else {
+          document.body.classList.remove('capture-mode');
+          updateFooterAndPin();
+        }
+      }
+
+      document.getElementById('btnCaptureTop').addEventListener('click', (e) => {
+        e.stopPropagation();
+        setCaptureMode(true);
+      });
+      document.getElementById('btnCaptureSide').addEventListener('click', (e) => {
+        e.stopPropagation();
+        setCaptureMode(true);
+      });
+
+      document.addEventListener('click', () => {
+        if (state.captureMode) {
+          setCaptureMode(false);
+        }
+      });
+
+      // Reloj automático
+      setInterval(() => {
+        footerClock.textContent = getFormattedTime();
+      }, 15000);
+
+      // =========================================================================
+      // EXPORTACIÓN PNG DE ALTA RESOLUCIÓN (RESPETA EL VIEWBOX ACTIVO)
+      // =========================================================================
+      async function renderMapToPngBlob() {
+        const vb = VIEWBOX_MODES[state.cropMode];
+        const scale = 2;
+        const pad = 16;
+        const note = getActiveNote();
+        const includeFooter = Boolean(note || state.showTime);
+        const footerH = includeFooter ? 64 : 0;
+
+        const totalW = vb.w + pad * 2;
+        const totalH = vb.h + pad * 2 + footerH;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = totalW * scale;
+        canvas.height = totalH * scale;
+        const ctx = canvas.getContext('2d');
+        ctx.scale(scale, scale);
+
+        // 1. Fondo blanco puro
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, totalW, totalH);
+
+        // 2. Clonar SVG con viewBox exacto y estilos inline para la mesa activa
+        const clonedSvg = svgEl.cloneNode(true);
+        clonedSvg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+        clonedSvg.setAttribute('width', vb.w);
+        clonedSvg.setAttribute('height', vb.h);
+
+        const selectedClone = clonedSvg.querySelector('.table-item.selected');
+        if (selectedClone) {
+          selectedClone.querySelectorAll('.table-surface').forEach((el) => {
+            el.setAttribute('fill', '#f97316');
+            el.setAttribute('stroke', '#c2410c');
+            el.setAttribute('stroke-width', '2.2');
+          });
+          selectedClone.querySelectorAll('.chair-shape').forEach((el) => {
+            el.setAttribute('fill', '#fdba74');
+            el.setAttribute('stroke', '#c2410c');
+          });
+        }
+
+        const pulseClone = clonedSvg.querySelector('#pinPulse');
+        if (pulseClone) {
+          pulseClone.setAttribute('r', '30');
+          pulseClone.setAttribute('fill-opacity', '0.26');
+        }
+
+        const serializer = new XMLSerializer();
+        const svgStr = serializer.serializeToString(clonedSvg);
+        const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(svgBlob);
+
+        try {
+          const img = await new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = () => resolve(image);
+            image.onerror = reject;
+            image.src = url;
+          });
+          ctx.drawImage(img, pad, pad, vb.w, vb.h);
+        } finally {
+          URL.revokeObjectURL(url);
+        }
+
+        // 3. Barra inferior discreta si hay nota o reloj
+        if (includeFooter) {
+          const barY = pad + vb.h + 4;
+          ctx.strokeStyle = '#e2e8f0';
+          ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          ctx.moveTo(pad + 8, barY);
+          ctx.lineTo(totalW - pad - 8, barY);
+          ctx.stroke();
+
+          if (note) {
+            ctx.fillStyle = '#f97316';
+            ctx.beginPath();
+            ctx.arc(pad + 22, barY + 32, 6.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '700 22px -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(note, pad + 38, barY + 39);
+          }
+
+          if (state.showTime) {
+            ctx.fillStyle = '#475569';
+            ctx.font = '700 22px -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(getFormattedTime(), totalW - pad - 12, barY + 39);
+            ctx.textAlign = 'left';
+          }
+        }
+
+        return new Promise((resolve, reject) => {
+          canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error('No se pudo generar el PNG'));
+          }, 'image/png', 1.0);
+        });
+      }
+
+      // Compartir / Guardar PNG
+      document.getElementById('btnSharePng').addEventListener('click', async () => {
+        if (state.pinX === null) {
+          showToast('Toca primero una mesa en el plano');
+          return;
+        }
+        try {
+          showToast('Generando imagen...');
+          const blob = await renderMapToPngBlob();
+          const stamp = getFormattedTime().replace(':', '');
+          const fileName = `comedor-${stamp}.png`;
+          const file = new File([blob], fileName, { type: 'image/png' });
+
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: 'Ubicación en el comedor',
+              text: getActiveNote() || 'Aquí estamos en el comedor'
+            });
+            showToast('¡Listo para enviar!');
+          } else {
+            const dlUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = dlUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(dlUrl), 1000);
+            showToast('PNG guardado. ¡Compártelo en WhatsApp!');
+          }
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+          showToast('Usa "Modo Captura" para tomar screenshot');
+        }
+      });
+
+      // Copiar imagen al portapapeles
+      document.getElementById('btnCopyPng').addEventListener('click', async () => {
+        if (state.pinX === null) {
+          showToast('Toca primero una mesa en el plano');
+          return;
+        }
+        try {
+          const blob = await renderMapToPngBlob();
+          if (navigator.clipboard && window.ClipboardItem) {
+            await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+            showToast('¡Copiada! Pégala con Ctrl+V en WhatsApp Web');
+          } else {
+            showToast('Usa "Compartir / Guardar PNG" en este navegador');
+          }
+        } catch (err) {
+          showToast('Usa "Compartir / Guardar PNG" en este navegador');
+        }
+      });
+
+      // Toast helper
+      function showToast(msg) {
+        toastMessage.textContent = msg;
+        toastBox.classList.add('visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastBox.classList.remove('visible');
+        }, 2600);
+      }
+
+      // Inicialización
+      buildAllTables();
+      setCropMode('comedor', true);
+      updateFooterAndPin();
+    })();
+  </script>
+</body>
+</html>
